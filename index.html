@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مدير الحمية الغذائية</title>
+  <title>الحمية الغذائية - أبو معتصم الغالي</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; direction: rtl; }
-    h1 { color: #333; text-align: center; }
+    h1 { color: #333; text-align: center; margin-bottom: 5px; }
+    .quote { text-align: center; font-style: italic; color: #555; margin-bottom: 20px; }
     .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     select, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
-    .result { margin-top: 20px; background: #eef; padding: 15px; border-radius: 6px; font-size: 18px; min-height: 50px; }
-    .all-meals { background: #fffbe6; padding: 15px; margin-top: 20px; border: 1px solid #ddd; border-radius: 6px; }
+    .result, .all-meals { margin-top: 20px; background: #eef; padding: 15px; border-radius: 6px; font-size: 18px; min-height: 50px; }
+    .all-meals { background: #fffbe6; border: 1px solid #ddd; }
     .meal-label { font-weight: bold; margin-top: 10px; display: block; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>مدير الحمية الغذائية</h1>
+    <h1>الحمية الغذائية - أبو معتصم الغالي</h1>
+    <div class="quote" id="dailyQuote"></div>
 
     <label for="day">اختر اليوم:</label>
-    <select id="day" onchange="showAllMeals()">
+    <select id="day">
       <option value="">-- اختر اليوم --</option>
       <option>السبت</option>
       <option>الأحد</option>
@@ -30,9 +32,9 @@
       <option>الجمعة</option>
     </select>
 
-    <label for="meal">اختر الوجبة:</label>
+    <label for="meal">اختر الوجبة (أو اتركها فارغة لعرض جميع الوجبات):</label>
     <select id="meal">
-      <option value="">-- اختر الوجبة --</option>
+      <option value="">-- جميع الوجبات --</option>
       <option>فطور</option>
       <option>وجبة خفيفة 1</option>
       <option>غداء</option>
@@ -41,9 +43,9 @@
       <option>بعد العشاء</option>
     </select>
 
-    <button onclick="showMeal()">عرض الوجبة</button>
+    <button onclick="handleDisplay()">عرض</button>
 
-    <div class="result" id="mealResult">سيتم عرض الوجبة هنا بعد الاختيار</div>
+    <div class="result" id="mealResult"></div>
     <div class="all-meals" id="allMealsResult"></div>
   </div>
 
@@ -51,6 +53,19 @@
     const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
     let meals = {};
     const daysMap = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+    const quotes = [
+      "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
+      "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك.",
+      "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة والإيجابية.",
+      "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
+      "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
+      "دع طعامك يكون دواءك، ودواءك يكون طعامك. – أبقراط",
+      "الطعام الجيد يصنع يومًا جيدًا، واليوم الجيد يصنع حياة أفضل.",
+      "من يتحكم في طعامه، يتحكم في صحته وسعادته."
+    ];
+
+    document.getElementById('dailyQuote').textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
 
     fetch(sheetURL)
       .then(res => res.text())
@@ -73,7 +88,6 @@
         });
 
         setTodayDefault();
-        showAllMeals();
       });
 
     function setTodayDefault() {
@@ -82,10 +96,21 @@
       document.getElementById('day').value = todayArabic;
     }
 
+    function handleDisplay() {
+      const meal = document.getElementById('meal').value;
+      if (meal === '') {
+        showAllMeals();
+      } else {
+        showMeal();
+      }
+    }
+
     function showMeal() {
       const day = document.getElementById('day').value;
       const meal = document.getElementById('meal').value;
       const resultDiv = document.getElementById('mealResult');
+      const allMealsDiv = document.getElementById('allMealsResult');
+      allMealsDiv.innerHTML = '';
 
       if (day && meal && meals[day] && meals[day][meal]) {
         resultDiv.textContent = `${meal} في ${day}: ${meals[day][meal]}`;
@@ -96,7 +121,9 @@
 
     function showAllMeals() {
       const day = document.getElementById('day').value;
+      const resultDiv = document.getElementById('mealResult');
       const allMealsDiv = document.getElementById('allMealsResult');
+      resultDiv.textContent = '';
       allMealsDiv.innerHTML = '';
 
       if (day && meals[day]) {
@@ -105,6 +132,8 @@
           content += `<div><span class="meal-label">${mealType}:</span> ${description}</div>`;
         }
         allMealsDiv.innerHTML = content;
+      } else {
+        allMealsDiv.innerHTML = "يرجى اختيار يوم صحيح أو قد لا تتوفر البيانات.";
       }
     }
   </script>

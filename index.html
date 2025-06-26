@@ -1,58 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diet Manager</title>
+  <title>مدير الحمية</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
-    h1 { color: #333; }
-    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    select, button { width: 100%; padding: 10px; margin: 10px 0; }
-    .result { margin-top: 20px; background: #eef; padding: 15px; border-radius: 6px; }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; direction: rtl; }
+    h1 { color: #333; text-align: center; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    select, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
+    .result { margin-top: 20px; background: #eef; padding: 15px; border-radius: 6px; font-size: 18px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Diet Manager</h1>
-    <label for="day">Select a Day:</label>
+    <h1>مدير الحمية الغذائية</h1>
+    <label for="day">اختر اليوم:</label>
     <select id="day">
-      <option value="">--Choose Day--</option>
-      <option>Monday</option>
-      <option>Tuesday</option>
-      <option>Wednesday</option>
-      <option>Thursday</option>
-      <option>Friday</option>
-      <option>Saturday</option>
-      <option>Sunday</option>
+      <option value="">-- اختر اليوم --</option>
+      <option>السبت</option>
+      <option>الأحد</option>
+      <option>الاثنين</option>
+      <option>الثلاثاء</option>
+      <option>الأربعاء</option>
+      <option>الخميس</option>
+      <option>الجمعة</option>
     </select>
 
-    <label for="meal">Select a Meal:</label>
+    <label for="meal">اختر الوجبة:</label>
     <select id="meal">
-      <option value="">--Choose Meal--</option>
-      <option>Breakfast</option>
-      <option>Lunch</option>
-      <option>Dinner</option>
+      <option value="">-- اختر الوجبة --</option>
+      <option>فطور</option>
+      <option>وجبة خفيفة 1</option>
+      <option>غداء</option>
+      <option>وجبة خفيفة 2</option>
+      <option>عشاء</option>
+      <option>بعد العشاء</option>
     </select>
 
-    <button onclick="showMeal()">Show Meal</button>
+    <button onclick="showMeal()">عرض الوجبة</button>
 
     <div class="result" id="mealResult"></div>
   </div>
 
   <script>
     const meals = {
-      Monday: {
-        Breakfast: "Oatmeal with banana",
-        Lunch: "Grilled chicken with rice",
-        Dinner: "Lentil soup and salad"
+      "السبت": {
+        "فطور": "90 غ خبز الشعير + 2 ملعقة لبنة + بيضة مسلوقة + شاي بدون سكر",
+        "وجبة خفيفة 1": "17 حبة عنب أو 2 تمر",
+        "غداء": "200 غ صدر دجاج مشوي + 2 كوب خضار مسلوقة أو مشوية + ملعقة زيت زيتون + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "حبة خوخ",
+        "عشاء": "60 غ تونا مصفية من الزيت + 2 توست أسمر + خضار ورقية",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
       },
-      Tuesday: {
-        Breakfast: "Boiled eggs and toast",
-        Lunch: "Fish fillet and quinoa",
-        Dinner: "Steamed vegetables and brown rice"
+      "الأحد": {
+        "فطور": "90 غ خبز الشعير + 1 ملعقة لبنة + 2 ملعقة حمص + شاي بدون سكر",
+        "وجبة خفيفة 1": "17 حبة عنب أو 2 تمر",
+        "غداء": "150 غ لحم مفروم (كفتة مشوية أو مطبوخة بدون دهون) + كوب خضار مطبوخة + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "1 حبة دراق",
+        "عشاء": "60 غ تونا مصفية من الزيت + 2 توست أسمر + خضار ورقية",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
       },
-      // Add more days and meals as needed...
+      "الاثنين": {
+        "فطور": "90 غ خبز الشعير + 2 ملعقة لبنة + خيارة + شاي بدون سكر",
+        "وجبة خفيفة 1": "1 كوب جوافة",
+        "غداء": "200 غ صدر دجاج مشوي + 2 كوب خضار مشوية + ملعقة زيت زيتون + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "1 حبة دراق",
+        "عشاء": "1 بيضة مسلوقة + 2 ملعقة لبنة + 1 توست أسمر + خيار",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
+      },
+      "الثلاثاء": {
+        "فطور": "90 غ خبز الشعير + 2 ملعقة لبنة + بيضة مسلوقة + شاي بدون سكر",
+        "وجبة خفيفة 1": "17 حبة عنب أو 2 تمر",
+        "غداء": "150 غ لحم مفروم (كفتة مشوية أو مطبوخة بدون دهون) + كوب خضار مطبوخة + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "1 حبة خوخ",
+        "عشاء": "1 بيضة مسلوقة + 2 ملعقة لبنة + 1 توست أسمر + خيار",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
+      },
+      "الأربعاء": {
+        "فطور": "90 غ خبز الشعير + 2 ملعقة لبنة + خيارة + شاي بدون سكر",
+        "وجبة خفيفة 1": "1 كوب جوافة",
+        "غداء": "210 غ سمك مشوي + 2 كوب خضار مشوية + ملعقة زيت زيتون + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "17 حبة عنب أو 2 تمر",
+        "عشاء": "1 بيضة مسلوقة + 2 ملعقة لبنة + 1 توست أسمر + خيار",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
+      },
+      "الخميس": {
+        "فطور": "90 غ خبز الشعير + 2 ملعقة لبنة + بيضة مسلوقة + شاي بدون سكر",
+        "وجبة خفيفة 1": "1 كوب جوافة",
+        "غداء": "300 غ صدر دجاج مشوي + 2 كوب خضار مشوية + ملعقة زيت زيتون + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "1 حبة دراق",
+        "عشاء": "1 بيضة مسلوقة + 2 ملعقة لبنة + 1 توست أسمر + خيار",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
+      },
+      "الجمعة": {
+        "فطور": "90 غ خبز الشعير + 2 ملعقة لبنة + بيضة مسلوقة + شاي بدون سكر",
+        "وجبة خفيفة 1": "1 كوب جوافة",
+        "غداء": "150 غ لحم مفروم (كفتة مشوية أو مطبوخة بدون دهون) + كوب خضار مطبوخة + كوب رز أو 1 توست أسمر",
+        "وجبة خفيفة 2": "1 حبة دراق",
+        "عشاء": "60 غ تونا مصفية من الزيت + 2 توست أسمر + خضار ورقية",
+        "بعد العشاء": "15 حبة بزر أو 2 مكعب شوكولاتة دارك"
+      }
     };
 
     function showMeal() {
@@ -61,9 +109,9 @@
       const resultDiv = document.getElementById('mealResult');
 
       if (day && meal && meals[day] && meals[day][meal]) {
-        resultDiv.textContent = `${meal} on ${day}: ${meals[day][meal]}`;
+        resultDiv.textContent = `${meal} في ${day}: ${meals[day][meal]}`;
       } else {
-        resultDiv.textContent = "Please select a valid day and meal.";
+        resultDiv.textContent = "يرجى اختيار يوم ووجبة صحيحة.";
       }
     }
   </script>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diet Manager</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+    h1 { color: #333; }
+    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    select, button { width: 100%; padding: 10px; margin: 10px 0; }
+    .result { margin-top: 20px; background: #eef; padding: 15px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Diet Manager</h1>
+    <label for="day">Select a Day:</label>
+    <select id="day">
+      <option value="">--Choose Day--</option>
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+      <option>Saturday</option>
+      <option>Sunday</option>
+    </select>
+
+    <label for="meal">Select a Meal:</label>
+    <select id="meal">
+      <option value="">--Choose Meal--</option>
+      <option>Breakfast</option>
+      <option>Lunch</option>
+      <option>Dinner</option>
+    </select>
+
+    <button onclick="showMeal()">Show Meal</button>
+
+    <div class="result" id="mealResult"></div>
+  </div>
+
+  <script>
+    const meals = {
+      Monday: {
+        Breakfast: "Oatmeal with banana",
+        Lunch: "Grilled chicken with rice",
+        Dinner: "Lentil soup and salad"
+      },
+      Tuesday: {
+        Breakfast: "Boiled eggs and toast",
+        Lunch: "Fish fillet and quinoa",
+        Dinner: "Steamed vegetables and brown rice"
+      },
+      // Add more days and meals as needed...
+    };
+
+    function showMeal() {
+      const day = document.getElementById('day').value;
+      const meal = document.getElementById('meal').value;
+      const resultDiv = document.getElementById('mealResult');
+
+      if (day && meal && meals[day] && meals[day][meal]) {
+        resultDiv.textContent = `${meal} on ${day}: ${meals[day][meal]}`;
+      } else {
+        resultDiv.textContent = "Please select a valid day and meal.";
+      }
+    }
+  </script>
+</body>
+</html>

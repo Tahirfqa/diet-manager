@@ -5,19 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الحمية الغذائية - أبو معتصم الغالي</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; direction: rtl; }
-    h1 { color: #333; text-align: center; margin-bottom: 5px; }
-    .quote { text-align: center; font-style: italic; color: #555; margin-bottom: 20px; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    select, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
-    .result, .all-meals { margin-top: 20px; background: #eef; padding: 15px; border-radius: 6px; font-size: 18px; min-height: 50px; }
-    .all-meals { background: #fffbe6; border: 1px solid #ddd; }
-    .meal-label { font-weight: bold; margin-top: 10px; display: block; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f2f2f2, #e0e0e0);
+      direction: rtl;
+    }
+
+    header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .quote {
+      text-align: center;
+      font-style: italic;
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 30px;
+      padding: 10px 20px;
+      background: #f0f8ff;
+      border-radius: 8px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .result, .all-meals {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fafafa;
+      border-left: 6px solid #3498db;
+      border-radius: 8px;
+      font-size: 17px;
+    }
+
+    .all-meals {
+      background-color: #fffdf0;
+      border-left-color: #f39c12;
+    }
+
+    .meal-label {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-top: 12px;
+      display: block;
+    }
+
+    .meal-label::before {
+      content: attr(data-icon) " ";
+      margin-left: 5px;
+    }
+
+    h3 {
+      margin-bottom: 15px;
+      color: #34495e;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #888;
+    }
   </style>
 </head>
 <body>
+  <header>الحمية الغذائية - أبو معتصم الغالي</header>
+
   <div class="container">
-    <h1>الحمية الغذائية - أبو معتصم الغالي</h1>
     <div class="quote" id="dailyQuote"></div>
 
     <label for="day">اختر اليوم:</label>
@@ -40,7 +136,6 @@
       <option>غداء</option>
       <option>وجبة خفيفة 2</option>
       <option>عشاء</option>
-      <option>بعد العشاء</option>
     </select>
 
     <button onclick="handleDisplay()">عرض</button>
@@ -48,6 +143,8 @@
     <div class="result" id="mealResult"></div>
     <div class="all-meals" id="allMealsResult"></div>
   </div>
+
+  <footer>تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️</footer>
 
   <script>
     const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
@@ -64,6 +161,14 @@
       "الطعام الجيد يصنع يومًا جيدًا، واليوم الجيد يصنع حياة أفضل.",
       "من يتحكم في طعامه، يتحكم في صحته وسعادته."
     ];
+
+    const icons = {
+      'فطور': '🍳',
+      'وجبة خفيفة 1': '🍇',
+      'غداء': '🍽️',
+      'وجبة خفيفة 2': '🍎',
+      'عشاء': '🌙'
+    };
 
     document.getElementById('dailyQuote').textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
 
@@ -82,8 +187,7 @@
             'وجبة خفيفة 1': row.c[2]?.v || '',
             'غداء': row.c[3]?.v || '',
             'وجبة خفيفة 2': row.c[4]?.v || '',
-            'عشاء': row.c[5]?.v || '',
-            'بعد العشاء': row.c[6]?.v || ''
+            'عشاء': row.c[5]?.v || ''
           };
         });
 
@@ -113,7 +217,7 @@
       allMealsDiv.innerHTML = '';
 
       if (day && meal && meals[day] && meals[day][meal]) {
-        resultDiv.textContent = `${meal} في ${day}: ${meals[day][meal]}`;
+        resultDiv.textContent = `${icons[meal] || ''} ${meal} في ${day}: ${meals[day][meal]}`;
       } else {
         resultDiv.textContent = "يرجى اختيار يوم ووجبة صحيحة أو قد تكون البيانات غير متوفرة بعد.";
       }
@@ -129,7 +233,7 @@
       if (day && meals[day]) {
         let content = `<h3>جميع الوجبات ليوم ${day}</h3>`;
         for (const [mealType, description] of Object.entries(meals[day])) {
-          content += `<div><span class="meal-label">${mealType}:</span> ${description}</div>`;
+          content += `<div><span class="meal-label" data-icon="${icons[mealType] || ''}">${mealType}:</span> ${description}</div>`;
         }
         allMealsDiv.innerHTML = content;
       } else {

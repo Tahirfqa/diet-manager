@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>الحمية الغذائية - أبو معتصم الغالي</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0077b6" />
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -61,6 +63,7 @@
       margin-bottom: 10px;
       padding-bottom: 10px;
       border-bottom: 1px dashed #ccc;
+      line-height: 1.6;
     }
     .meal-output div:last-child {
       border-bottom: none;
@@ -70,6 +73,11 @@
       font-size: 14px;
       color: #888;
       margin: 30px 0 10px;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 17px;
+      }
     }
   </style>
 </head>
@@ -111,15 +119,13 @@ const wisdoms = [
   "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
   "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
   "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
-  "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك.",
+  "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Set random wisdom
   document.getElementById("wisdomText").textContent =
     wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
-  // Populate day dropdown
   const daySelect = document.getElementById("day");
   daysOfWeek.forEach(day => {
     const option = document.createElement("option");
@@ -128,11 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
     daySelect.appendChild(option);
   });
 
-  // Auto-select today's day
-  const todayIndex = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to السبت=0
+  const todayIndex = (new Date().getDay() + 6) % 7;
   daySelect.value = daysOfWeek[todayIndex];
 
-  // Fetch meals from Google Sheet
   fetch(sheetURL)
     .then(res => res.text())
     .then(text => {
@@ -151,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
       });
 
-      showMeal(); // Show today's meals by default
+      showMeal();
     });
 });
 
@@ -178,6 +182,20 @@ function showMeal() {
     resultDiv.innerHTML = content;
   }
 }
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(function (registration) {
+          console.log('ServiceWorker registered: ', registration);
+        })
+        .catch(function (error) {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+    });
+  }
 </script>
 
 </body>

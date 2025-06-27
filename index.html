@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>الحمية الغذائية - أبو معتصم الغالي</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #f9f9f9;
-      padding: 20px;
-      direction: rtl;
-      text-align: right;
+      background: #f4f6f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
     }
     header {
       background-color: #0077b6;
       color: white;
       padding: 15px;
-      border-radius: 8px;
       text-align: center;
-      margin-bottom: 20px;
+      font-size: 22px;
     }
-    .quote {
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .wisdom {
       font-style: italic;
       color: #555;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     select, button {
-      font-size: 1em;
-      padding: 8px;
-      margin: 5px 0;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
       width: 100%;
-      max-width: 300px;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid #ccc;
     }
     button {
@@ -41,43 +48,42 @@
       cursor: pointer;
     }
     button:hover {
-      background-color: #005f8e;
+      background-color: #005f87;
     }
-    .meal-box {
-      background-color: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 15px;
+    .meal-output {
       margin-top: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid #ddd;
     }
-    .meal-box div {
-      margin-bottom: 15px;
-      border-bottom: 1px dashed #ccc;
+    .meal-output div {
+      margin-bottom: 10px;
       padding-bottom: 10px;
+      border-bottom: 1px dashed #ccc;
     }
-    .meal-box div:last-child {
+    .meal-output div:last-child {
       border-bottom: none;
     }
     footer {
-      margin-top: 40px;
       text-align: center;
+      font-size: 14px;
       color: #888;
-      font-size: 0.9em;
+      margin: 30px 0 10px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>الحمية الغذائية - أبو معتصم الغالي</h1>
-  </header>
 
-  <div class="quote" id="dailyQuote"></div>
+<header>الحمية الغذائية - أبو معتصم الغالي</header>
+
+<div class="container">
+  <div class="wisdom" id="wisdomText"></div>
 
   <label for="day">اختر اليوم:</label>
   <select id="day"></select>
 
-  <label for="meal">اختر الوجبة (اختياري):</label>
+  <label for="meal">اختر نوع الوجبة (أو اتركه لعرض جميع الوجبات):</label>
   <select id="meal">
     <option value="">كل الوجبات</option>
     <option value="فطور">فطور</option>
@@ -89,81 +95,90 @@
 
   <button onclick="showMeal()">عرض</button>
 
-  <div class="meal-box" id="mealResult"></div>
+  <div id="mealResult" class="meal-output"></div>
+</div>
 
-  <footer>تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️</footer>
+<footer>تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️</footer>
 
-  <script>
-    const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
+<script>
+const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
 
-    const wisdoms = [
-      "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
-      "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة.",
-      "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
-      "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
-      "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
-      "دع طعامك يكون دواءك، ودواءك يكون طعامك. – أبقراط"
-    ];
-    document.getElementById("dailyQuote").textContent = wisdoms[Math.floor(Math.random() * wisdoms.length)];
+let meals = {};
+const daysOfWeek = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+const wisdoms = [
+  "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
+  "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة.",
+  "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
+  "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
+  "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
+  "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك.",
+];
 
-    const meals = {};
-    const days = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
-    const mealTypes = ["فطور", "وجبة خفيفة 1", "غداء", "وجبة خفيفة 2", "عشاء"];
+document.addEventListener("DOMContentLoaded", () => {
+  // Set random wisdom
+  document.getElementById("wisdomText").textContent =
+    wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
-    const daySelect = document.getElementById("day");
-    days.forEach(day => {
-      const option = document.createElement("option");
-      option.value = day;
-      option.textContent = day;
-      daySelect.appendChild(option);
-    });
+  // Populate day dropdown
+  const daySelect = document.getElementById("day");
+  daysOfWeek.forEach(day => {
+    const option = document.createElement("option");
+    option.value = day;
+    option.textContent = day;
+    daySelect.appendChild(option);
+  });
 
-    // Select current day
-    const todayIndex = new Date().getDay(); // 0 = Sunday
-    const arabicDay = days[(todayIndex + 6) % 7]; // Shift to Arabic week starting Saturday
-    daySelect.value = arabicDay;
+  // Auto-select today's day
+  const todayIndex = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to السبت=0
+  daySelect.value = daysOfWeek[todayIndex];
 
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(text => {
-        const json = JSON.parse(text.substr(47).slice(0, -2));
-        const rows = json.table.rows;
+  // Fetch meals from Google Sheet
+  fetch(sheetURL)
+    .then(res => res.text())
+    .then(text => {
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+      const rows = json.table.rows;
 
-        rows.forEach(row => {
-          const day = row.c[0]?.v;
-          if (!day) return;
-          meals[day] = {
-            "فطور": (row.c[1]?.v || '').trim(),
-            "وجبة خفيفة 1": (row.c[2]?.v || '').trim(),
-            "غداء": (row.c[3]?.v || '').trim(),
-            "وجبة خفيفة 2": (row.c[4]?.v || '').trim(),
-            "عشاء": (row.c[5]?.v || '').trim()
-          };
-        });
+      rows.forEach(row => {
+        const day = row.c[0]?.v;
+        if (!day) return;
+        meals[day] = {
+          'فطور': row.c[1]?.v || '',
+          'وجبة خفيفة 1': row.c[2]?.v || '',
+          'غداء': row.c[3]?.v || '',
+          'وجبة خفيفة 2': row.c[4]?.v || '',
+          'عشاء': row.c[5]?.v || ''
+        };
       });
 
-    function showMeal() {
-      const selectedDay = document.getElementById("day").value;
-      const selectedMeal = document.getElementById("meal").value;
-      const resultDiv = document.getElementById("mealResult");
-      resultDiv.innerHTML = "";
+      showMeal(); // Show today's meals by default
+    });
+});
 
-      if (!meals[selectedDay]) {
-        resultDiv.textContent = "لا توجد بيانات لهذا اليوم.";
-        return;
-      }
+function showMeal() {
+  const day = document.getElementById('day').value;
+  const meal = document.getElementById('meal').value;
+  const resultDiv = document.getElementById('mealResult');
+  resultDiv.innerHTML = '';
 
-      if (selectedMeal && meals[selectedDay][selectedMeal]) {
-        resultDiv.innerHTML = `<div><strong>${selectedMeal}:</strong><br>${meals[selectedDay][selectedMeal].replace(/\n/g, "<br>")}</div>`;
-      } else {
-        mealTypes.forEach(type => {
-          const content = meals[selectedDay][type];
-          if (content) {
-            resultDiv.innerHTML += `<div><strong>${type}:</strong><br>${content.replace(/\n/g, "<br>")}</div>`;
-          }
-        });
-      }
+  if (!meals[day]) {
+    resultDiv.textContent = "لا توجد بيانات لهذا اليوم.";
+    return;
+  }
+
+  if (meal) {
+    const content = meals[day][meal] || 'لا توجد بيانات لهذه الوجبة.';
+    resultDiv.innerHTML = `<div><strong>${meal}:</strong><br>${content.replace(/\n/g, "<br>")}</div>`;
+  } else {
+    let content = '';
+    for (let mealType in meals[day]) {
+      const description = meals[day][mealType];
+      content += `<div><strong>${mealType}:</strong><br>${description.replace(/\n/g, "<br>")}</div>`;
     }
-  </script>
+    resultDiv.innerHTML = content;
+  }
+}
+</script>
+
 </body>
 </html>

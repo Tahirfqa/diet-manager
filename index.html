@@ -60,10 +60,10 @@
       border: 1px solid #ddd;
     }
     .meal-output div {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       padding-bottom: 10px;
       border-bottom: 1px dashed #ccc;
-      line-height: 1.6;
+      line-height: 1.7;
     }
     .meal-output div:last-child {
       border-bottom: none;
@@ -170,14 +170,34 @@ function showMeal() {
     return;
   }
 
+  const mealTimes = {
+    'فطور': 'الساعة 10:30-9:30',
+    'وجبة خفيفة 1': 'الساعة 12',
+    'غداء': 'الساعة 2-3',
+    'وجبة خفيفة 2': 'الساعة 5',
+    'عشاء': 'الساعة 7-8'
+  };
+
+  const styleTime = time => `<div style="color: #777; font-size: 14px; margin-bottom: 10px;">${time}</div>`;
+
   if (meal) {
     const content = meals[day][meal] || 'لا توجد بيانات لهذه الوجبة.';
-    resultDiv.innerHTML = `<div><strong>${meal}:</strong><br>${content.replace(/\n/g, "<br>")}</div>`;
+    resultDiv.innerHTML = `
+      <div>
+        <strong>${meal}</strong><br>
+        ${styleTime(mealTimes[meal] || '')}
+        <div>${content.replace(/\n/g, "<br>")}</div>
+      </div>`;
   } else {
     let content = '';
     for (let mealType in meals[day]) {
       const description = meals[day][mealType];
-      content += `<div><strong>${mealType}:</strong><br>${description.replace(/\n/g, "<br>")}</div>`;
+      content += `
+        <div>
+          <strong>${mealType}</strong><br>
+          ${styleTime(mealTimes[mealType] || '')}
+          <div>${description.replace(/\n/g, "<br>")}</div>
+        </div>`;
     }
     resultDiv.innerHTML = content;
   }

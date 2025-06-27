@@ -112,7 +112,7 @@
 const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
 
 let meals = {};
-const daysOfWeek = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+const daysOfWeek = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 const wisdoms = [
   "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
   "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة.",
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     daySelect.appendChild(option);
   });
 
-  const todayIndex = (new Date().getDay() + 6) % 7;
+  const todayIndex = new Date().getDay(); // 0 = الأحد
   daySelect.value = daysOfWeek[todayIndex];
 
   fetch(sheetURL)

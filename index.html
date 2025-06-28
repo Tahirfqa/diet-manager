@@ -17,7 +17,7 @@
       margin: 0;
       padding: 0;
     }
-    /* Loader */
+    /* Initial Loader */
     #loader {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
@@ -42,18 +42,16 @@
       max-width: 85%;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
+    /* Spinner */
     .spinner {
-      margin-top: 25px;
-      width: 50px;
-      height: 50px;
+      margin: 25px auto;
+      width: 50px; height: 50px;
       border: 6px solid #ddd;
       border-top-color: #0077b6;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     header {
       background-color: #0077b6;
       color: white;
@@ -103,6 +101,7 @@
       border-radius: 8px;
       padding: 15px;
       border: 1px solid #ddd;
+      display: block;
     }
     .meal-output div {
       margin-bottom: 20px;
@@ -135,7 +134,7 @@
 </head>
 <body>
 
-  <!-- Loader -->
+  <!-- Initial Loader -->
   <div id="loader">
     <img src="pic1.png" alt="صورة ترحيبية" />
     <div id="loaderText">أهلاً وسهلاً بكم في تطبيق أبو معتصم للحمية الغذائية</div>
@@ -162,6 +161,8 @@
 
     <button onclick="resetPage()">إعادة تعيين</button>
 
+    <!-- Sub-loader for dropdown changes -->
+    <div id="subloader" class="spinner" style="display:none;"></div>
     <div id="mealResult" class="meal-output"></div>
   </div>
 
@@ -182,30 +183,37 @@
       "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
+
     const MIN_LOAD_TIME = 3000;
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
+      // Random wisdom
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
+
       const daySelect = document.getElementById("day");
       const mealSelect = document.getElementById("meal");
+      // Populate days
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
         opt.value = day; opt.textContent = day;
         daySelect.appendChild(opt);
       });
+      // Auto-select today
       daySelect.value = daysOfWeek[new Date().getDay()];
-      daySelect.addEventListener('change', showMealContent);
-      mealSelect.addEventListener('change', showMealContent);
 
+      // Attach change handlers
+      daySelect.addEventListener('change', handleSelection);
+      mealSelect.addEventListener('change', handleSelection);
+
+      // Fetch sheet data
       fetch(sheetURL)
         .then(res => res.text())
         .then(text => {
           const json = JSON.parse(text.substr(47).slice(0, -2));
           json.table.rows.forEach(row => {
-            const d = row.c[0]?.v;
-            if (!d) return;
+            const d = row.c[0]?.v; if (!d) return;
             meals[d] = {
               'فطور': row.c[1]?.v || '',
               'وجبة خفيفة 1': row.c[2]?.v || '',
@@ -214,12 +222,26 @@
               'عشاء': row.c[5]?.v || ''
             };
           });
+          // Initial display
           showMealContent();
+          // Hide initial loader after minimum time
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, MIN_LOAD_TIME - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
         });
     });
+
+    function handleSelection() {
+      const sub = document.getElementById('subloader');
+      const out = document.getElementById('mealResult');
+      out.style.display = 'none';
+      sub.style.display = 'block';
+      setTimeout(() => {
+        showMealContent();
+        sub.style.display = 'none';
+        out.style.display = 'block';
+      }, 1000);
+    }
 
     function showMealContent() {
       const day = document.getElementById('day').value;

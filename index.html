@@ -189,33 +189,28 @@
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Random wisdom
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
       const daySelect = document.getElementById("day");
       const mealSelect = document.getElementById("meal");
-      // Populate days
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
         opt.value = day;
         opt.textContent = day;
         daySelect.appendChild(opt);
       });
-      // Auto-select today
-      daySelect.value = daysOfWeek[new Date().getDay()];
 
-      // Attach change handlers
+      daySelect.value = daysOfWeek[new Date().getDay()];
       daySelect.addEventListener('change', handleSelection);
       mealSelect.addEventListener('change', handleSelection);
 
-      // Fetch sheet data
       fetch(sheetURL)
         .then(res => res.text())
         .then(text => {
           const json = JSON.parse(text.substr(47).slice(0, -2));
           json.table.rows.forEach(row => {
-            const d = row.c[0]?.v; 
+            const d = row.c[0]?.v;
             if (!d) return;
             meals[d] = {
               'فطور': row.c[1]?.v || '',
@@ -225,7 +220,6 @@
               'عشاء': row.c[5]?.v || ''
             };
           });
-          // Initial display
           showMealContent();
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, MIN_LOAD_TIME - elapsed);
@@ -242,7 +236,7 @@
         showMealContent();
         sub.style.display = 'none';
         out.style.display = 'block';
-      }, 1000); // exactly 1 second
+      }, 500); // half-second loading
     }
 
     function showMealContent() {

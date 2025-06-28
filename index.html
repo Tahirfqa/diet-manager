@@ -42,7 +42,6 @@
       max-width: 85%;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
-    /* Spinner */
     .spinner {
       margin-top: 25px;
       width: 50px;
@@ -114,6 +113,13 @@
     .meal-output div:last-child {
       border-bottom: none;
     }
+    .closing-text {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 18px;
+      color: #0077b6;
+      font-weight: bold;
+    }
     footer {
       text-align: center;
       font-size: 14px;
@@ -154,7 +160,6 @@
       <option value="عشاء">عشاء</option>
     </select>
 
-    <button id="viewBtn" onclick="showMeal()">عرض</button>
     <button onclick="resetPage()">إعادة تعيين</button>
 
     <div id="mealResult" class="meal-output"></div>
@@ -177,7 +182,6 @@
       "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
-
     const MIN_LOAD_TIME = 3000;
     const loadStart = Date.now();
 
@@ -185,13 +189,16 @@
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
       const daySelect = document.getElementById("day");
+      const mealSelect = document.getElementById("meal");
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
-        opt.value = day;
-        opt.textContent = day;
+        opt.value = day; opt.textContent = day;
         daySelect.appendChild(opt);
       });
       daySelect.value = daysOfWeek[new Date().getDay()];
+      daySelect.addEventListener('change', showMealContent);
+      mealSelect.addEventListener('change', showMealContent);
+
       fetch(sheetURL)
         .then(res => res.text())
         .then(text => {
@@ -231,37 +238,26 @@
         'عشاء': 'الساعة 7-8'
       };
       const styleTime = t => `<div style="color:#777;font-size:14px;margin-bottom:10px;">${t}</div>`;
+      let html = '';
       if (meal) {
-        const desc = meals[day][meal] || 'لا توجد بيانات لهذه الوجبة.';
-        resultDiv.innerHTML = `
+        html = `
           <div>
             <strong>${meal}</strong><br>
-            ${styleTime(times[meal] || '')}
-            <div>${desc.replace(/\n/g, "<br>")}</div>
+            ${styleTime(times[meal]||'')}
+            <div>${meals[day][meal].replace(/\n/g,"<br>")}</div>
           </div>`;
       } else {
-        let html = '';
         for (let mType in meals[day]) {
           html += `
             <div>
               <strong>${mType}</strong><br>
-              ${styleTime(times[mType] || '')}
-              <div>${meals[day][mType].replace(/\n/g, "<br>")}</div>
+              ${styleTime(times[mType]||'')}
+              <div>${meals[day][mType].replace(/\n/g,"<br>")}</div>
             </div>`;
         }
-        resultDiv.innerHTML = html;
       }
-    }
-
-    function showMeal() {
-      const btn = document.getElementById('viewBtn');
-      btn.disabled = true;
-      btn.textContent = 'جاري التحميل...';
-      setTimeout(() => {
-        showMealContent();
-        btn.disabled = false;
-        btn.textContent = 'عرض';
-      }, 1000);
+      html += `<div class="closing-text">صحتين و عافية</div>`;
+      resultDiv.innerHTML = html;
     }
 
     function resetPage() {

@@ -52,6 +52,7 @@
       animation: spin 1s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
     header {
       background-color: #0077b6;
       color: white;
@@ -197,7 +198,8 @@
       // Populate days
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
-        opt.value = day; opt.textContent = day;
+        opt.value = day;
+        opt.textContent = day;
         daySelect.appendChild(opt);
       });
       // Auto-select today
@@ -213,7 +215,8 @@
         .then(text => {
           const json = JSON.parse(text.substr(47).slice(0, -2));
           json.table.rows.forEach(row => {
-            const d = row.c[0]?.v; if (!d) return;
+            const d = row.c[0]?.v; 
+            if (!d) return;
             meals[d] = {
               'فطور': row.c[1]?.v || '',
               'وجبة خفيفة 1': row.c[2]?.v || '',
@@ -224,7 +227,6 @@
           });
           // Initial display
           showMealContent();
-          // Hide initial loader after minimum time
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, MIN_LOAD_TIME - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
@@ -240,7 +242,7 @@
         showMealContent();
         sub.style.display = 'none';
         out.style.display = 'block';
-      }, 1000);
+      }, 1000); // exactly 1 second
     }
 
     function showMealContent() {

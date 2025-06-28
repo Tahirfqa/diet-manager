@@ -19,14 +19,11 @@
     }
     /* Loader */
     #loader {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
       background: #f4f6f9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       z-index: 9999;
     }
     #loader img {
@@ -149,7 +146,7 @@
       <option value="عشاء">عشاء</option>
     </select>
 
-    <button onclick="showMeal()">عرض</button>
+    <button id="viewBtn" onclick="showMeal()">عرض</button>
     <button onclick="resetPage()">إعادة تعيين</button>
 
     <div id="mealResult" class="meal-output"></div>
@@ -169,15 +166,12 @@
       "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
-
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
-      // display random wisdom
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
-      // populate days dropdown
       const daySelect = document.getElementById("day");
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
@@ -185,10 +179,8 @@
         opt.textContent = day;
         daySelect.appendChild(opt);
       });
-      // auto-select today
       daySelect.value = daysOfWeek[new Date().getDay()];
 
-      // fetch sheet data
       fetch(sheetURL)
         .then(res => res.text())
         .then(text => {
@@ -204,25 +196,23 @@
               'عشاء': row.c[5]?.v || ''
             };
           });
-          showMeal();
-          // hide loader after min 1.2s
+          showMealContent();
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, 1200 - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
         });
     });
 
-    function showMeal() {
+    // الأصلي: عرض النتائج بدون تحميل صناعي
+    function showMealContent() {
       const day = document.getElementById('day').value;
       const meal = document.getElementById('meal').value;
       const resultDiv = document.getElementById('mealResult');
       resultDiv.innerHTML = '';
-
       if (!meals[day]) {
         resultDiv.textContent = "لا توجد بيانات لهذا اليوم.";
         return;
       }
-
       const times = {
         'فطور': 'الساعة 10:30-9:30',
         'وجبة خفيفة 1': 'الساعة 12',
@@ -231,7 +221,6 @@
         'عشاء': 'الساعة 7-8'
       };
       const styleTime = t => `<div style="color:#777;font-size:14px;margin-bottom:10px;">${t}</div>`;
-
       if (meal) {
         const desc = meals[day][meal] || 'لا توجد بيانات لهذه الوجبة.';
         resultDiv.innerHTML = `
@@ -254,18 +243,26 @@
       }
     }
 
+    // جديد: تأخير عرض النتائج لثانية مع تغيير زر العرض
+    function showMeal() {
+      const btn = document.getElementById('viewBtn');
+      btn.disabled = true;
+      btn.textContent = 'جاري التحميل...';
+      setTimeout(() => {
+        showMealContent();
+        btn.disabled = false;
+        btn.textContent = 'عرض';
+      }, 1000);
+    }
+
     function resetPage() {
       window.location.reload();
     }
 
-    // service worker registration & update
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
-          .then(reg => {
-            console.log('SW registered', reg);
-            reg.update();
-          })
+          .then(reg => { reg.update(); })
           .catch(err => console.log('SW registration failed', err));
       });
     }

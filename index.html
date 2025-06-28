@@ -27,7 +27,10 @@
       z-index: 9999;
     }
     #loader img {
-      width: 120px; height: 120px;
+      width: 80%; max-width: 400px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     #loaderText {
       margin-top: 15px;
@@ -43,17 +46,6 @@
       padding: 15px;
       text-align: center;
       font-size: 22px;
-    }
-    .hero {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .hero img {
-      width: 100%;
-      max-width: 600px;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .container {
       max-width: 600px;
@@ -123,16 +115,11 @@
 
   <!-- Loader -->
   <div id="loader">
-    <img src="icon-192.png" alt="Logo" />
+    <img src="pic1.png" alt="صورة ترحيبية" />
     <div id="loaderText">أهلاً وسهلاً بكم في تطبيق أبو معتصم للحمية الغذائية</div>
   </div>
 
   <header>الحمية الغذائية - أبو معتصم الغالي</header>
-
-  <!-- Hero Image -->
-  <div class="hero">
-    <img src="pic1.png" alt="صورة رئيسية لخطّة الحمية">
-  </div>
 
   <div class="container">
     <div class="wisdom" id="wisdomText"></div>
@@ -174,13 +161,12 @@
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
 
-    const MIN_LOAD_TIME = 2500;
+    const MIN_LOAD_TIME = 3000;
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
-
       const daySelect = document.getElementById("day");
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
@@ -189,7 +175,6 @@
         daySelect.appendChild(opt);
       });
       daySelect.value = daysOfWeek[new Date().getDay()];
-
       fetch(sheetURL)
         .then(res => res.text())
         .then(text => {

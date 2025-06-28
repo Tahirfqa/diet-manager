@@ -69,6 +69,10 @@
       text-align: center;
       margin-bottom: 20px;
     }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
     select, button {
       padding: 10px;
       margin: 10px 0;
@@ -76,6 +80,7 @@
       width: 100%;
       border-radius: 5px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
     button {
       background-color: #0077b6;
@@ -145,6 +150,7 @@
     </select>
 
     <button onclick="showMeal()">عرض</button>
+    <button onclick="resetPage()">إعادة تعيين</button>
 
     <div id="mealResult" class="meal-output"></div>
   </div>
@@ -167,9 +173,11 @@
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
+      // display random wisdom
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
+      // populate days dropdown
       const daySelect = document.getElementById("day");
       daysOfWeek.forEach(day => {
         const opt = document.createElement("option");
@@ -177,8 +185,10 @@
         opt.textContent = day;
         daySelect.appendChild(opt);
       });
+      // auto-select today
       daySelect.value = daysOfWeek[new Date().getDay()];
 
+      // fetch sheet data
       fetch(sheetURL)
         .then(res => res.text())
         .then(text => {
@@ -195,6 +205,7 @@
             };
           });
           showMeal();
+          // hide loader after min 1.2s
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, 1200 - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
@@ -243,6 +254,11 @@
       }
     }
 
+    function resetPage() {
+      window.location.reload();
+    }
+
+    // service worker registration & update
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')

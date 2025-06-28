@@ -30,9 +30,12 @@
       width: 120px; height: 120px;
     }
     #loaderText {
-      margin-top: 10px;
-      color: #777;
-      font-size: 16px;
+      margin-top: 15px;
+      color: #0077b6;
+      font-size: 18px;
+      text-align: center;
+      line-height: 1.4;
+      max-width: 80%;
     }
     header {
       background-color: #0077b6;
@@ -109,6 +112,7 @@
       font-size: 14px;
       color: #888;
       margin: 30px 0 10px;
+      line-height: 1.5;
     }
     @media (max-width: 600px) {
       body { font-size: 17px; }
@@ -120,7 +124,7 @@
   <!-- Loader -->
   <div id="loader">
     <img src="icon-192.png" alt="Logo" />
-    <div id="loaderText">جاري التحميل...</div>
+    <div id="loaderText">أهلاً وسهلاً بكم في تطبيق أبو معتصم للحمية الغذائية</div>
   </div>
 
   <header>الحمية الغذائية - أبو معتصم الغالي</header>
@@ -152,7 +156,10 @@
     <div id="mealResult" class="meal-output"></div>
   </div>
 
-  <footer>تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️</footer>
+  <footer>
+    تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️<br>
+    لحقوق محفوظة 2025
+  </footer>
 
   <script>
     const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
@@ -166,6 +173,8 @@
       "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
+
+    const MIN_LOAD_TIME = 2500;
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -198,12 +207,11 @@
           });
           showMealContent();
           const elapsed = Date.now() - loadStart;
-          const delay = Math.max(0, 1200 - elapsed);
+          const delay = Math.max(0, MIN_LOAD_TIME - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
         });
     });
 
-    // الأصلي: عرض النتائج بدون تحميل صناعي
     function showMealContent() {
       const day = document.getElementById('day').value;
       const meal = document.getElementById('meal').value;
@@ -243,7 +251,6 @@
       }
     }
 
-    // جديد: تأخير عرض النتائج لثانية مع تغيير زر العرض
     function showMeal() {
       const btn = document.getElementById('viewBtn');
       btn.disabled = true;

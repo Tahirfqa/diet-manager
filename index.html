@@ -42,6 +42,19 @@
       max-width: 85%;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
+    /* Spinner */
+    .spinner {
+      margin-top: 25px;
+      width: 50px;
+      height: 50px;
+      border: 6px solid #ddd;
+      border-top-color: #0077b6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
     header {
       background-color: #0077b6;
       color: white;
@@ -120,6 +133,7 @@
   <div id="loader">
     <img src="pic1.png" alt="صورة ترحيبية" />
     <div id="loaderText">أهلاً وسهلاً بكم في تطبيق أبو معتصم للحمية الغذائية</div>
+    <div class="spinner"></div>
   </div>
 
   <header>الحمية الغذائية - أبو معتصم الغالي</header>

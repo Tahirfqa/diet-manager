@@ -2,6 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>الحمية الغذائية - أبو معتصم الغالي</title>
   <link rel="manifest" href="manifest.json" />
@@ -13,6 +16,23 @@
       color: #333;
       margin: 0;
       padding: 0;
+    }
+    /* Loader */
+    #loader {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #f4f6f9;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    #loader img {
+      width: 120px; height: 120px;
+    }
+    #loaderText {
+      margin-top: 10px;
+      color: #777;
+      font-size: 16px;
     }
     header {
       background-color: #0077b6;
@@ -75,148 +95,149 @@
       margin: 30px 0 10px;
     }
     @media (max-width: 600px) {
-      body {
-        font-size: 17px;
-      }
+      body { font-size: 17px; }
     }
   </style>
 </head>
 <body>
 
-<header>الحمية الغذائية - أبو معتصم الغالي</header>
+  <!-- Loader -->
+  <div id="loader">
+    <img src="icon-192.png" alt="Logo" />
+    <div id="loaderText">جاري التحميل...</div>
+  </div>
 
-<div class="container">
-  <div class="wisdom" id="wisdomText"></div>
+  <header>الحمية الغذائية - أبو معتصم الغالي</header>
 
-  <label for="day">اختر اليوم:</label>
-  <select id="day"></select>
+  <div class="container">
+    <div class="wisdom" id="wisdomText"></div>
 
-  <label for="meal">اختر نوع الوجبة (أو اتركه لعرض جميع الوجبات):</label>
-  <select id="meal">
-    <option value="">كل الوجبات</option>
-    <option value="فطور">فطور</option>
-    <option value="وجبة خفيفة 1">وجبة خفيفة 1</option>
-    <option value="غداء">غداء</option>
-    <option value="وجبة خفيفة 2">وجبة خفيفة 2</option>
-    <option value="عشاء">عشاء</option>
-  </select>
+    <label for="day">اختر اليوم:</label>
+    <select id="day"></select>
 
-  <button onclick="showMeal()">عرض</button>
+    <label for="meal">اختر نوع الوجبة (أو اتركه لعرض جميع الوجبات):</label>
+    <select id="meal">
+      <option value="">كل الوجبات</option>
+      <option value="فطور">فطور</option>
+      <option value="وجبة خفيفة 1">وجبة خفيفة 1</option>
+      <option value="غداء">غداء</option>
+      <option value="وجبة خفيفة 2">وجبة خفيفة 2</option>
+      <option value="عشاء">عشاء</option>
+    </select>
 
-  <div id="mealResult" class="meal-output"></div>
-</div>
+    <button onclick="showMeal()">عرض</button>
 
-<footer>تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️</footer>
+    <div id="mealResult" class="meal-output"></div>
+  </div>
 
-<script>
-const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
+  <footer>تم إعداد هذا البرنامج بكل حب لأبو معتصم ❤️</footer>
 
-let meals = {};
-const daysOfWeek = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-const wisdoms = [
-  "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
-  "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة.",
-  "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
-  "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
-  "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
-  "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
-];
+  <script>
+    const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
+    let meals = {};
+    const daysOfWeek = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const wisdoms = [
+      "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
+      "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة.",
+      "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
+      "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
+      "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
+      "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
+    ];
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("wisdomText").textContent =
-    wisdoms[Math.floor(Math.random() * wisdoms.length)];
+    // بداية قياس الوقت
+    const loadStart = Date.now();
 
-  const daySelect = document.getElementById("day");
-  daysOfWeek.forEach(day => {
-    const option = document.createElement("option");
-    option.value = day;
-    option.textContent = day;
-    daySelect.appendChild(option);
-  });
+    document.addEventListener("DOMContentLoaded", () => {
+      // حكمة عشوائية
+      document.getElementById("wisdomText").textContent =
+        wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
-  const todayIndex = new Date().getDay(); // 0 = الأحد
-  daySelect.value = daysOfWeek[todayIndex];
-
-  fetch(sheetURL)
-    .then(res => res.text())
-    .then(text => {
-      const json = JSON.parse(text.substr(47).slice(0, -2));
-      const rows = json.table.rows;
-
-      rows.forEach(row => {
-        const day = row.c[0]?.v;
-        if (!day) return;
-        meals[day] = {
-          'فطور': row.c[1]?.v || '',
-          'وجبة خفيفة 1': row.c[2]?.v || '',
-          'غداء': row.c[3]?.v || '',
-          'وجبة خفيفة 2': row.c[4]?.v || '',
-          'عشاء': row.c[5]?.v || ''
-        };
+      // تعبئة قائمة الأيام
+      const daySelect = document.getElementById("day");
+      daysOfWeek.forEach(day => {
+        let opt = document.createElement("option");
+        opt.value = day; opt.textContent = day;
+        daySelect.appendChild(opt);
       });
+      // اختيار اليوم الفعلي
+      daySelect.value = daysOfWeek[new Date().getDay()];
 
-      showMeal();
-    });
-});
-
-function showMeal() {
-  const day = document.getElementById('day').value;
-  const meal = document.getElementById('meal').value;
-  const resultDiv = document.getElementById('mealResult');
-  resultDiv.innerHTML = '';
-
-  if (!meals[day]) {
-    resultDiv.textContent = "لا توجد بيانات لهذا اليوم.";
-    return;
-  }
-
-  const mealTimes = {
-    'فطور': 'الساعة 10:30-9:30',
-    'وجبة خفيفة 1': 'الساعة 12',
-    'غداء': 'الساعة 2-3',
-    'وجبة خفيفة 2': 'الساعة 5',
-    'عشاء': 'الساعة 7-8'
-  };
-
-  const styleTime = time => `<div style="color: #777; font-size: 14px; margin-bottom: 10px;">${time}</div>`;
-
-  if (meal) {
-    const content = meals[day][meal] || 'لا توجد بيانات لهذه الوجبة.';
-    resultDiv.innerHTML = `
-      <div>
-        <strong>${meal}</strong><br>
-        ${styleTime(mealTimes[meal] || '')}
-        <div>${content.replace(/\n/g, "<br>")}</div>
-      </div>`;
-  } else {
-    let content = '';
-    for (let mealType in meals[day]) {
-      const description = meals[day][mealType];
-      content += `
-        <div>
-          <strong>${mealType}</strong><br>
-          ${styleTime(mealTimes[mealType] || '')}
-          <div>${description.replace(/\n/g, "<br>")}</div>
-        </div>`;
-    }
-    resultDiv.innerHTML = content;
-  }
-}
-</script>
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(function (registration) {
-          console.log('ServiceWorker registered: ', registration);
-        })
-        .catch(function (error) {
-          console.log('ServiceWorker registration failed: ', error);
+      // جلب البيانات
+      fetch(sheetURL)
+        .then(r => r.text())
+        .then(text => {
+          const json = JSON.parse(text.substr(47).slice(0, -2));
+          json.table.rows.forEach(row => {
+            const day = row.c[0]?.v;
+            if (!day) return;
+            meals[day] = {
+              'فطور': row.c[1]?.v || '',
+              'وجبة خفيفة 1': row.c[2]?.v || '',
+              'غداء': row.c[3]?.v || '',
+              'وجبة خفيفة 2': row.c[4]?.v || '',
+              'عشاء': row.c[5]?.v || ''
+            };
+          });
+          showMeal();
+          // إزالة الـ Loader بعد 1.2 ثانية كحد أدنى
+          const elapsed = Date.now() - loadStart;
+          const delay = Math.max(0, 1200 - elapsed);
+          setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
         });
     });
-  }
-</script>
 
+    function showMeal() {
+      const day = document.getElementById('day').value;
+      const meal = document.getElementById('meal').value;
+      const resultDiv = document.getElementById('mealResult');
+      resultDiv.innerHTML = '';
+      if (!meals[day]) {
+        resultDiv.textContent = "لا توجد بيانات لهذا اليوم.";
+        return;
+      }
+      const times = {
+        'فطور': 'الساعة 10:30-9:30',
+        'وجبة خفيفة 1': 'الساعة 12',
+        'غداء': 'الساعة 2-3',
+        'وجبة خفيفة 2': 'الساعة 5',
+        'عشاء': 'الساعة 7-8'
+      };
+      const styleTime = t => `<div style="color:#777;font-size:14px;margin-bottom:10px;">${t}</div>`;
+
+      if (meal) {
+        const desc = meals[day][meal] || 'لا توجد بيانات لهذه الوجبة.';
+        resultDiv.innerHTML = `
+          <div>
+            <strong>${meal}</strong><br>
+            ${styleTime(times[meal]||'')}
+            <div>${desc.replace(/\n/g, "<br>")}</div>
+          </div>`;
+      } else {
+        let html = '';
+        for (let mType in meals[day]) {
+          html += `
+            <div>
+              <strong>${mType}</strong><br>
+              ${styleTime(times[mType]||'')}
+              <div>${meals[day][mType].replace(/\n/g, "<br>")}</div>
+            </div>`;
+        }
+        resultDiv.innerHTML = html;
+      }
+    }
+
+    // تسجيل و تحديث الـ Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => {
+            console.log('SW registered', reg);
+            reg.update();
+          })
+          .catch(err => console.log('SW registration failed', err));
+      });
+    }
+  </script>
 </body>
 </html>

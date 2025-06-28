@@ -19,11 +19,14 @@
     }
     /* Loader */
     #loader {
-      position: fixed; top: 0; left: 0;
+      position: fixed;
+      top: 0; left: 0;
       width: 100%; height: 100%;
       background: #f4f6f9;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       z-index: 9999;
     }
     #loader img {
@@ -40,6 +43,17 @@
       padding: 15px;
       text-align: center;
       font-size: 22px;
+    }
+    .hero {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .hero img {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .container {
       max-width: 600px;
@@ -109,6 +123,11 @@
 
   <header>الحمية الغذائية - أبو معتصم الغالي</header>
 
+  <!-- Hero Image -->
+  <div class="hero">
+    <img src="pic1.png" alt="صورة رئيسية لخطّة الحمية">
+  </div>
+
   <div class="container">
     <div class="wisdom" id="wisdomText"></div>
 
@@ -145,33 +164,29 @@
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
 
-    // بداية قياس الوقت
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
-      // حكمة عشوائية
       document.getElementById("wisdomText").textContent =
         wisdoms[Math.floor(Math.random() * wisdoms.length)];
 
-      // تعبئة قائمة الأيام
       const daySelect = document.getElementById("day");
       daysOfWeek.forEach(day => {
-        let opt = document.createElement("option");
-        opt.value = day; opt.textContent = day;
+        const opt = document.createElement("option");
+        opt.value = day;
+        opt.textContent = day;
         daySelect.appendChild(opt);
       });
-      // اختيار اليوم الفعلي
       daySelect.value = daysOfWeek[new Date().getDay()];
 
-      // جلب البيانات
       fetch(sheetURL)
-        .then(r => r.text())
+        .then(res => res.text())
         .then(text => {
           const json = JSON.parse(text.substr(47).slice(0, -2));
           json.table.rows.forEach(row => {
-            const day = row.c[0]?.v;
-            if (!day) return;
-            meals[day] = {
+            const d = row.c[0]?.v;
+            if (!d) return;
+            meals[d] = {
               'فطور': row.c[1]?.v || '',
               'وجبة خفيفة 1': row.c[2]?.v || '',
               'غداء': row.c[3]?.v || '',
@@ -180,7 +195,6 @@
             };
           });
           showMeal();
-          // إزالة الـ Loader بعد 1.2 ثانية كحد أدنى
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, 1200 - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
@@ -192,10 +206,12 @@
       const meal = document.getElementById('meal').value;
       const resultDiv = document.getElementById('mealResult');
       resultDiv.innerHTML = '';
+
       if (!meals[day]) {
         resultDiv.textContent = "لا توجد بيانات لهذا اليوم.";
         return;
       }
+
       const times = {
         'فطور': 'الساعة 10:30-9:30',
         'وجبة خفيفة 1': 'الساعة 12',
@@ -210,7 +226,7 @@
         resultDiv.innerHTML = `
           <div>
             <strong>${meal}</strong><br>
-            ${styleTime(times[meal]||'')}
+            ${styleTime(times[meal] || '')}
             <div>${desc.replace(/\n/g, "<br>")}</div>
           </div>`;
       } else {
@@ -219,7 +235,7 @@
           html += `
             <div>
               <strong>${mType}</strong><br>
-              ${styleTime(times[mType]||'')}
+              ${styleTime(times[mType] || '')}
               <div>${meals[day][mType].replace(/\n/g, "<br>")}</div>
             </div>`;
         }
@@ -227,7 +243,6 @@
       }
     }
 
-    // تسجيل و تحديث الـ Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')

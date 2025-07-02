@@ -59,26 +59,26 @@
     }
     .container { max-width:600px; margin: 0 auto; }
 
-    /* font-size control: professional boxed buttons */
+    /* font-size control: clear boxed buttons */
     .font-control {
       display: flex;
-      justify-content: flex-end;
-      padding: 15px 25px 0;
-      gap: 8px;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px 0 10px;
     }
-    .font-control button {
-      width: 36px;
-      height: 36px;
-      font-size: 1.25rem;
-      border: 2px solid #0077b6;
-      background: white;
+    .font-control .btn-font {
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: bold;
       color: #0077b6;
+      background: white;
+      border: 2px solid #0077b6;
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.2s, color 0.2s;
     }
-    .font-control button:hover {
-      background: #0077b6;
+    .font-control .btn-font:hover {
+      background-color: #0077b6;
       color: white;
     }
 
@@ -88,13 +88,13 @@
       text-align: center;
       margin-bottom: 30px;
     }
-    .wisdom-section .wisdom-label {
+    .wisdom-label {
       font-size: 1.125rem;
       font-weight: bold;
       color: #333;
       margin-bottom: 8px;
     }
-    .wisdom-section .wisdom {
+    .wisdom {
       font-style: italic;
       color: #555;
       font-size: 1.125rem;
@@ -186,8 +186,8 @@
 
   <!-- font size controls -->
   <div class="font-control">
-    <button onclick="changeFontSize(-2)" title="تصغير الخط">−</button>
-    <button onclick="changeFontSize(2)" title="تكبير الخط">+</button>
+    <button class="btn-font" onclick="changeFontSize(2)">تكبير الخط</button>
+    <button class="btn-font" onclick="changeFontSize(-2)">تصغير الخط</button>
   </div>
 
   <!-- wisdom -->
@@ -225,36 +225,38 @@
   <script>
     const sheetURL = 'https://docs.google.com/spreadsheets/d/14gQEIbO44LevNhvrWV1tn8bYjvwyhG63hTSatC8WTw8/gviz/tq?tqx=out:json';
     let meals = {};
-    const daysOfWeek = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
     const monthsArabic = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
     const wisdoms = [
       "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى.",
       "ابدأ يومك بأكل صحي، واحصد يومًا مليئًا بالطاقة.",
       "العقل السليم في الجسم السليم، والغذاء المتوازن هو مفتاح كليهما.",
       "الوقاية خير من العلاج، والغذاء الصحي أول خطوات الوقاية.",
-      "من يتحكم في طعامه، يتحكم في صحته وسعادته.",
+      "من يتحكم في طعامه، يتحكم في صحته وسعادة.",
       "جسمك هو بيتك الحقيقي، فحافظ عليه كما تحافظ على أغلى ممتلكاتك."
     ];
-
     const MIN_LOAD_TIME = 3000;
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
+      // Display today
       const today = new Date();
       document.getElementById("todayDate").textContent =
-        `${daysOfWeek[today.getDay()]}، ${today.getDate()} ${monthsArabic[today.getMonth()]} ${today.getFullYear()}`;
+        `${days[today.getDay()]}، ${today.getDate()} ${monthsArabic[today.getMonth()]} ${today.getFullYear()}`;
 
+      // Populate selects
       const daySelect = document.getElementById("day"),
             mealSelect = document.getElementById("meal");
-      daysOfWeek.forEach(d => {
+      days.forEach(d => {
         const o = document.createElement("option");
         o.value = d; o.textContent = d;
         daySelect.appendChild(o);
       });
-      daySelect.value = daysOfWeek[today.getDay()];
+      daySelect.value = days[today.getDay()];
       daySelect.addEventListener('change', handleSelection);
       mealSelect.addEventListener('change', handleSelection);
 
+      // Fetch sheet
       fetch(sheetURL)
         .then(r => r.text())
         .then(text => {

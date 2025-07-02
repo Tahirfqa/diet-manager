@@ -55,47 +55,33 @@
       color: #222;
       font-size: 1.125rem;
       font-weight: bold;
-      margin: 12px 0;
+      margin: 12px 25px;
     }
     .container { max-width:600px; margin: 0 auto; }
 
-    /* Controls & Wisdom */
+    /* font-size control */
     .font-control {
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
+      display: flex;
+      justify-content: flex-end;
       padding: 15px 25px 0;
+      gap: 10px;
     }
     .font-control button {
-      font-size:1rem;
-      padding:5px 12px;
-      margin:0 6px;
-      border:1px solid #0077b6;
-      background:white;
-      color:#0077b6;
-      border-radius:4px;
-      cursor:pointer;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #0077b6;
+      transition: color .2s;
     }
-    .font-control button:hover {
-      background:#0077b6; color:white;
-    }
-    .font-control .bars {
-      display:flex;
-      margin: 0 4px;
-    }
-    .font-control .bar {
-      width:8px; height:20px;
-      margin:0 2px;
-      background:#ddd;
-      border-radius:2px;
-    }
-    .font-control .bar.active {
-      background:#0077b6;
-    }
+    .font-control button.increase { font-size: 1.5rem; }
+    .font-control button.decrease { font-size: 1rem; }
+    .font-control button:hover { color: #005f87; }
+
     .wisdom-section {
       padding: 0 25px 20px;
       border-bottom: 1px solid #ddd;
       text-align: center;
+      margin-bottom: 30px;
     }
     .wisdom-section .wisdom-label {
       font-size: 1.125rem;
@@ -112,52 +98,68 @@
 
     /* Main selection area */
     .container-inner {
-      background:white; padding:25px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.1);
-      border-radius:10px;
+      background: white;
+      padding: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 10px;
       margin-bottom: 30px;
     }
-    label {
-      display:block; margin-top:10px;
-      font-size:1rem;
+    .container-inner label {
+      display: block;
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: bold;
     }
-    select, button {
-      padding:10px; margin:10px 0;
-      font-size:1rem; width:100%;
-      border-radius:5px; border:1px solid #ccc;
-      box-sizing:border-box;
+    .container-inner select,
+    .container-inner button {
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 1rem;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
-    button {
-      background-color:#0077b6; color:white;
-      border:none; cursor:pointer;
+    .container-inner button {
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
-    button:hover {
-      background-color:#005f87;
+    .container-inner button:hover {
+      background-color: #005f87;
     }
+
     .meal-output {
-      margin-top:20px;
-      background:#f9f9f9; border-radius:8px;
-      padding:15px; border:1px solid #ddd;
-      font-size:1rem;
+      margin-top: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
     }
     .meal-output div {
-      margin-bottom:20px;
-      padding-bottom:10px;
-      border-bottom:1px dashed #ccc;
-      line-height:1.7;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #ccc;
+      line-height: 1.7;
     }
     .meal-output div:last-child {
-      border-bottom:none;
+      border-bottom: none;
     }
     .closing-text {
-      text-align:center; margin-top:15px;
-      font-size:1.125rem;
-      color:#0077b6; font-weight:bold;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 1.125rem;
+      color: #0077b6;
+      font-weight: bold;
     }
     footer {
-      text-align:center; font-size:0.875rem;
-      color:#888; margin:30px 0 10px;
-      line-height:1.5;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #888;
+      margin: 30px 0 10px;
+      line-height: 1.5;
     }
     @media (max-width:600px) {
       html { font-size:15px; }
@@ -175,13 +177,13 @@
   </div>
 
   <header>الحمية الغذائية - أبو معتصم الغالي</header>
+
   <div class="today-date" id="todayDate"></div>
 
   <!-- font size controls -->
   <div class="font-control">
-    <button onclick="changeFontSize(-2)">تصغير الخط</button>
-    <div class="bars" id="fontBars"></div>
-    <button onclick="changeFontSize(2)">تكبير الخط</button>
+    <button class="decrease" onclick="changeFontSize(-2)">A</button>
+    <button class="increase" onclick="changeFontSize(2)">A</button>
   </div>
 
   <!-- wisdom -->
@@ -234,12 +236,10 @@
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
-      // set today date
       const today = new Date();
       document.getElementById("todayDate").textContent =
         `${daysOfWeek[today.getDay()]}، ${today.getDate()} ${monthsArabic[today.getMonth()]} ${today.getFullYear()}`;
 
-      // populate selects
       const daySelect = document.getElementById("day"),
             mealSelect = document.getElementById("meal");
       daysOfWeek.forEach(d => {
@@ -251,7 +251,6 @@
       daySelect.addEventListener('change', handleSelection);
       mealSelect.addEventListener('change', handleSelection);
 
-      // fetch sheet
       fetch(sheetURL)
         .then(r => r.text())
         .then(text => {
@@ -269,7 +268,6 @@
           document.getElementById("wisdomText").textContent =
             wisdoms[Math.floor(Math.random()*wisdoms.length)];
           showMealContent();
-          updateFontIndicator();
           const elapsed = Date.now() - loadStart;
           const delay = Math.max(0, MIN_LOAD_TIME - elapsed);
           setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
@@ -283,7 +281,7 @@
       setTimeout(()=>{
         showMealContent();
         sub.style.display='none'; out.style.display='block';
-      },500);
+      }, 500);
     }
 
     function showMealContent(){
@@ -322,22 +320,6 @@
       let sz=parseFloat(getComputedStyle(root).fontSize);
       sz=Math.max(min,Math.min(max,sz+delta));
       root.style.fontSize=sz+'px';
-      updateFontIndicator();
-    }
-
-    function updateFontIndicator(){
-      const root=document.documentElement,
-            min=12,max=24,step=2,
-            total=(max-min)/step+1,
-            sz=parseFloat(getComputedStyle(root).fontSize),
-            idx=(sz-min)/step;
-      const bars=document.getElementById('fontBars');
-      bars.innerHTML='';
-      for(let i=0;i<total;i++){
-        const b=document.createElement('div');
-        b.className='bar'+(i<=idx?' active':'');
-        bars.appendChild(b);
-      }
     }
 
     function resetPage(){ window.location.reload(); }

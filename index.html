@@ -78,6 +78,11 @@
       background: #0077b6;
       color: white;
     }
+    .text-controls .hint {
+      margin-top: 8px;
+      font-size: 0.875rem;
+      color: #555;
+    }
     .wisdom {
       font-style: italic; color: #555;
       text-align: center; margin-bottom: 20px;
@@ -147,6 +152,7 @@
     <div class="text-controls">
       <button onclick="changeFontSize(2)">تكبير الخط</button>
       <button onclick="changeFontSize(-2)">تصغير الخط</button>
+      <div class="hint">يمكن الضغط عدة مرات لتغيير حجم الخط</div>
     </div>
     <div class="wisdom" id="wisdomText"></div>
 
@@ -165,7 +171,7 @@
 
     <button onclick="resetPage()">إعادة تعيين</button>
 
-    <!-- Sub-loader for dropdown changes -->
+    <!-- Spinner for selection changes -->
     <div id="subloader" class="spinner" style="display:none;"></div>
     <div id="mealResult" class="meal-output"></div>
   </div>

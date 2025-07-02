@@ -52,18 +52,14 @@
 
     .today-date {
       text-align: center;
-      color: #555;
-      font-size: 1rem;
-      margin: 10px 0;
+      color: #222;
+      font-size: 1.125rem;
+      font-weight: bold;
+      margin: 12px 0;
     }
-    .container {
-      max-width:600px;
-      margin:30px auto;
-      background:white; padding:25px;
-      border-radius:10px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.1);
-    }
-    /* font-size control */
+    .container { max-width:600px; margin: 0 auto; }
+
+    /* Controls & Wisdom */
     .font-control {
       display:flex;
       align-items:center;
@@ -72,8 +68,8 @@
     }
     .font-control button {
       font-size:1rem;
-      padding:5px 10px;
-      margin:0 8px;
+      padding:5px 12px;
+      margin:0 6px;
       border:1px solid #0077b6;
       background:white;
       color:#0077b6;
@@ -85,6 +81,7 @@
     }
     .font-control .bars {
       display:flex;
+      margin: 0 4px;
     }
     .font-control .bar {
       width:8px; height:20px;
@@ -101,16 +98,24 @@
       text-align: center;
     }
     .wisdom-section .wisdom-label {
+      font-size: 1.125rem;
       font-weight: bold;
-      margin-bottom: 8px;
-      font-size: 1rem;
       color: #333;
+      margin-bottom: 8px;
     }
     .wisdom-section .wisdom {
-      font-style:italic;
-      color:#555;
-      font-size:1rem;
+      font-style: italic;
+      color: #555;
+      font-size: 1.125rem;
       margin: 0;
+    }
+
+    /* Main selection area */
+    .container-inner {
+      background:white; padding:25px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      border-radius:10px;
+      margin-bottom: 30px;
     }
     label {
       display:block; margin-top:10px;
@@ -162,7 +167,7 @@
 </head>
 <body>
 
-  <!-- Initial Loader -->
+  <!-- Loader -->
   <div id="loader">
     <img src="pic1.png" alt="صورة ترحيبية"/>
     <div id="loaderText">أهلاً وسهلاً بكم في تطبيق أبو معتصم للحمية الغذائية</div>
@@ -172,18 +177,21 @@
   <header>الحمية الغذائية - أبو معتصم الغالي</header>
   <div class="today-date" id="todayDate"></div>
 
-  <!-- Controls & Wisdom -->
+  <!-- font size controls -->
   <div class="font-control">
     <button onclick="changeFontSize(-2)">تصغير الخط</button>
     <div class="bars" id="fontBars"></div>
     <button onclick="changeFontSize(2)">تكبير الخط</button>
   </div>
+
+  <!-- wisdom -->
   <div class="wisdom-section">
     <div class="wisdom-label">حكمة اليوم:</div>
     <p class="wisdom" id="wisdomText"></p>
   </div>
 
-  <div class="container">
+  <!-- main selection -->
+  <div class="container container-inner">
     <label for="day">اختر اليوم:</label>
     <select id="day"></select>
 
@@ -199,7 +207,6 @@
 
     <button onclick="resetPage()">إعادة تعيين</button>
 
-    <!-- Sub-loader -->
     <div id="subloader" class="spinner" style="display:none;"></div>
     <div id="mealResult" class="meal-output"></div>
   </div>
@@ -227,13 +234,14 @@
     const loadStart = Date.now();
 
     document.addEventListener("DOMContentLoaded", () => {
-      // today date
+      // set today date
       const today = new Date();
       document.getElementById("todayDate").textContent =
         `${daysOfWeek[today.getDay()]}، ${today.getDate()} ${monthsArabic[today.getMonth()]} ${today.getFullYear()}`;
 
-      const daySelect = document.getElementById("day");
-      const mealSelect = document.getElementById("meal");
+      // populate selects
+      const daySelect = document.getElementById("day"),
+            mealSelect = document.getElementById("meal");
       daysOfWeek.forEach(d => {
         const o = document.createElement("option");
         o.value = d; o.textContent = d;
@@ -243,6 +251,7 @@
       daySelect.addEventListener('change', handleSelection);
       mealSelect.addEventListener('change', handleSelection);
 
+      // fetch sheet
       fetch(sheetURL)
         .then(r => r.text())
         .then(text => {
@@ -261,9 +270,9 @@
             wisdoms[Math.floor(Math.random()*wisdoms.length)];
           showMealContent();
           updateFontIndicator();
-          const elapsed = Date.now()-loadStart;
-          const delay = Math.max(0, MIN_LOAD_TIME-elapsed);
-          setTimeout(()=>document.getElementById('loader').style.display='none',delay);
+          const elapsed = Date.now() - loadStart;
+          const delay = Math.max(0, MIN_LOAD_TIME - elapsed);
+          setTimeout(() => document.getElementById('loader').style.display = 'none', delay);
         });
     });
 

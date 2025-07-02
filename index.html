@@ -59,23 +59,28 @@
     }
     .container { max-width:600px; margin: 0 auto; }
 
-    /* font-size control */
+    /* font-size control: professional boxed buttons */
     .font-control {
       display: flex;
       justify-content: flex-end;
       padding: 15px 25px 0;
-      gap: 10px;
+      gap: 8px;
     }
     .font-control button {
-      border: none;
-      background: none;
-      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      font-size: 1.25rem;
+      border: 2px solid #0077b6;
+      background: white;
       color: #0077b6;
-      transition: color .2s;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
     }
-    .font-control button.increase { font-size: 1.5rem; }
-    .font-control button.decrease { font-size: 1rem; }
-    .font-control button:hover { color: #005f87; }
+    .font-control button:hover {
+      background: #0077b6;
+      color: white;
+    }
 
     .wisdom-section {
       padding: 0 25px 20px;
@@ -177,13 +182,12 @@
   </div>
 
   <header>الحمية الغذائية - أبو معتصم الغالي</header>
-
   <div class="today-date" id="todayDate"></div>
 
   <!-- font size controls -->
   <div class="font-control">
-    <button class="decrease" onclick="changeFontSize(-2)">A</button>
-    <button class="increase" onclick="changeFontSize(2)">A</button>
+    <button onclick="changeFontSize(-2)" title="تصغير الخط">−</button>
+    <button onclick="changeFontSize(2)" title="تكبير الخط">+</button>
   </div>
 
   <!-- wisdom -->
